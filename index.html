@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>English 5 Speaking – Hoa Khuong 2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  font-family:"Comic Sans MS",Arial,sans-serif;
+  background:linear-gradient(135deg,#e3f2fd,#ffffff);
+  margin:0;padding:16px
+}
+.container{
+  max-width:980px;margin:auto;
+  background:#fff;padding:20px;
+  border-radius:24px;
+  box-shadow:0 10px 30px rgba(0,0,0,.2)
+}
+h1,h2{text-align:center;color:#0d47a1}
+
+.card{
+  background:#f5fbff;
+  padding:16px;margin-top:16px;
+  border-radius:18px;
+  border:2px dashed #90caf9
+}
+
+input,select,textarea{
+  width:100%;padding:10px;
+  border-radius:12px;
+  border:2px solid #90caf9;
+  margin-top:6px;
+  font-size:15px
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  background:#1565c0;
+  color:white;
+  border:none;
+  border-radius:22px;
+  font-size:16px;
+  cursor:pointer
+}
+button:active{transform:scale(.97)}
+
+.unit-title{
+  background:#ffeb3b;
+  padding:8px;
+  border-radius:14px;
+  text-align:center;
+  font-weight:bold;
+  margin-bottom:6px
+}
+
+/* 🔴 TỪ CẦN SỬA – RÕ */
+.word-btn{
+  margin:6px;
+  padding:8px 14px;
+  border-radius:16px;
+  border:2px solid #c62828;
+  background:#ffcdd2;
+  color:#000;
+  font-weight:bold;
+  cursor:pointer
+}
+
+.sample-box{
+  background:#fffde7;
+  border:2px solid #fbc02d;
+  padding:10px;
+  border-radius:14px;
+  margin-top:8px
+}
+
+.star{font-size:26px;text-align:center}
+
+.certificate{
+  display:none;margin-top:22px;
+  padding:26px;border-radius:22px;
+  background:#fff;
+  border:6px double #fbc02d;
+  text-align:center
+}
+
+.school{font-size:22px;font-weight:bold}
+.cert-title{font-size:26px;color:#1565c0;margin:10px 0}
+.cert-name{font-size:24px;font-weight:bold}
+
+.sign{
+  display:flex;
+  justify-content:space-between;
+  margin-top:28px;
+  font-size:14px
+}
+
+.progress{
+  font-size:14px;
+  background:#e8f5e9;
+  padding:10px;
+  border-radius:12px;
+  margin-top:10px
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>🎤 English 5 Speaking</h1>
+<h2>Hoa Khuong 2 Primary School</h2>
+
+<div class="card">
+  <input id="studentName" placeholder="Student name">
+  <input id="studentClass" placeholder="Class (5/1)">
+</div>
+
+<div class="card">
+  <select id="mode">
+    <option value="unit">Speaking by Unit (SGK)</option>
+    <option value="free">Free Speaking</option>
+  </select>
+</div>
+
+<div class="card">
+  <select id="unit"></select>
+  <div class="unit-title" id="unitTitle"></div>
+
+  <!-- MẪU CÂU SGK -->
+  <div class="sample-box">
+    <b>📘 SGK Sample (for practice):</b>
+    <div id="sampleText"></div>
+    <button onclick="playSample()">🔊 Listen sample</button>
+  </div>
+</div>
+
+<div class="card">
+  <textarea id="studentText" rows="3"
+  placeholder="Press the microphone and speak..."></textarea>
+  <button onclick="startSpeak()">🎙 Start speaking</button>
+</div>
+
+<div class="card">
+  <h3>🤖 AI Feedback</h3>
+  <div id="feedback"></div>
+</div>
+
+<div class="card">
+  <h3>📊 Student Progress</h3>
+  <div id="progress" class="progress"></div>
+</div>
+
+<div class="certificate" id="certificate">
+  <div class="school">HOA KHUONG 2 PRIMARY SCHOOL</div>
+  <div class="cert-title">CERTIFICATE OF ENGLISH SPEAKING</div>
+  <p>This certificate is proudly presented to</p>
+  <div class="cert-name" id="cName"></div>
+  <p id="cClass"></p>
+  <p id="cUnit"></p>
+  <div class="star" id="cStar"></div>
+  <p>🌟 Keep practising English every day!</p>
+  <div class="sign">
+    <div><b>Principal</b><br>Tran Thi Kim Yen</div>
+    <div><b>Teacher</b><br>Pham Thi Ngoc Bich</div>
+  </div>
+</div>
+
+</div>
+
+<script>
+/* ===== SPEAK WORD (TẤT CẢ NÚT 🔊 ĐỀU ĐỌC) ===== */
+function speakWord(word){
+  let u=new SpeechSynthesisUtterance(word);
+  u.lang="en-GB";
+  u.rate=0.75;
+  speechSynthesis.speak(u);
+}
+
+/* ===== SAMPLE SPEAK ===== */
+function playSample(){
+  let u=new SpeechSynthesisUtterance(sampleText.innerText);
+  u.lang="en-GB";
+  u.rate=0.85;
+  speechSynthesis.speak(u);
+}
+
+/* ===== BASIC WORDS ===== */
+const basicWords=[
+"i","you","he","she","we","they","am","is","are","was","were",
+"do","does","did","will","would","like","to","be","a","an","the",
+"in","on","at","with","and","because","of","for","by","from",
+"go","goes","went","play","played","visit","visited","want",
+"have","has","had","can","could","should","this","that","these","those"
+];
+
+/* ===== 20 UNIT – SGK ===== */
+const unitPatterns={
+1:{title:"Unit 1: All about me",sample:"I’m Hoang. I’m in class 5/3. I live in the countryside.",required:["i","am"],keywords:["name","class","live","countryside","city"]},
+2:{title:"Unit 2: Our homes",sample:"I live in this house. My address is 65 Le Loi Street.",required:["i","live"],keywords:["house","flat","address","street"]},
+3:{title:"Unit 3: My foreign friends",sample:"He is Australian. He is friendly and helpful.",required:["he","she","is"],keywords:["vietnamese","american","australian","friendly","helpful"]},
+4:{title:"Unit 4: Our free-time activities",sample:"I like reading books in my free time.",required:["i","like"],keywords:["reading","walking","riding","playing"]},
+5:{title:"Unit 5: My future job",sample:"I’d like to be a teacher because I’d like to teach children.",required:["i","would","like","to","be","because"],keywords:["teacher","doctor","children"]},
+6:{title:"Unit 6: Our school rooms",sample:"Go upstairs and turn right. The computer room is on the second floor.",required:["go","turn"],keywords:["upstairs","room","floor"]},
+7:{title:"Unit 7: School activities",sample:"She likes doing projects because it is interesting.",required:["he","she","likes","because"],keywords:["reading","projects","games","interesting"]},
+8:{title:"Unit 8: In our classroom",sample:"The crayons are on the table.",required:["they","are"],keywords:["on","under","beside","crayons","books"]},
+9:{title:"Unit 9: Outdoor activities",sample:"Yesterday, we danced around the campfire.",required:["we","did"],keywords:["campsite","danced","watched"]},
+10:{title:"Unit 10: School trip",sample:"They visited the old buildings.",required:["they","did"],keywords:["visited","buildings"]},
+11:{title:"Unit 11: Family time",sample:"We took a boat trip around the bay.",required:["we","did"],keywords:["boat","trip","photos"]},
+12:{title:"Unit 12: Our Tet holiday",sample:"At Tet, I will decorate the house.",required:["i","will"],keywords:["decorate","house","banh","chung"]},
+13:{title:"Unit 13: Special days",sample:"We will have a party on Children’s Day.",required:["we","will"],keywords:["party","pizza","juice"]},
+14:{title:"Unit 14: Staying healthy",sample:"She does morning exercise every day.",required:["he","she","does"],keywords:["exercise","healthy"]},
+15:{title:"Unit 15: Our health",sample:"I have a headache. You should rest.",required:["i","have"],keywords:["headache","medicine","rest"]},
+16:{title:"Unit 16: Weather",sample:"In winter, it is cold.",required:["it","is"],keywords:["hot","cold","warm","wear"]},
+17:{title:"Unit 17: Stories",sample:"The tortoise ran slowly but worked hard.",required:["he","she"],keywords:["tortoise","hare","worked"]},
+18:{title:"Unit 18: Transport",sample:"I want to visit Dragon Bridge by bus.",required:["i","want","to"],keywords:["visit","bus","bike","taxi"]},
+19:{title:"Unit 19: Places of interest",sample:"Hoi An Old Town is beautiful.",required:["i","think","it","is"],keywords:["beautiful","peaceful"]},
+20:{title:"Unit 20: Summer holidays",sample:"I am going to visit Phu Quoc Island.",required:["i","am","going","to"],keywords:["visit","camping","swimming"]}
+};
+
+/* ===== LOAD UNITS ===== */
+const unitSel=document.getElementById("unit");
+for(let i=1;i<=20;i++){
+  unitSel.innerHTML+=`<option value="${i}">Unit ${i}</option>`;
+}
+unitSel.onchange=updateUnit;
+updateUnit();
+
+function updateUnit(){
+  let u=unitPatterns[unitSel.value];
+  unitTitle.innerText=u.title;
+  sampleText.innerText=u.sample;
+}
+
+/* ===== SPEECH RECOGNITION ===== */
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+const recog=new SpeechRecognition();
+recog.lang="en-GB";
+
+function startSpeak(){recog.start();}
+
+recog.onresult=e=>{
+  let said=e.results[0][0].transcript.toLowerCase();
+  studentText.value=said;
+  checkSpeech(said);
+};
+
+/* ===== CHECK SPEECH – KHÔNG SO VỚI SAMPLE ===== */
+function checkSpeech(said){
+  certificate.style.display="none";
+  let u=unitPatterns[unitSel.value];
+  let words=said.split(" ");
+  let wrong=[];
+
+  u.required.forEach(r=>{
+    if(!said.includes(r)) wrong.push(r);
+  });
+
+  words.forEach(w=>{
+    if(w.length>2 && !basicWords.includes(w) && !u.keywords.includes(w)){
+      wrong.push(w);
+    }
+  });
+
+  wrong=[...new Set(wrong)];
+  let stars=wrong.length>=6?2:wrong.length>=3?3:4;
+
+  feedback.innerHTML = wrong.length===0
+    ? "✅ Con nói đúng cấu trúc SGK. Very good!"
+    : `❌ Con cần sửa các từ sau:<br><br>
+       ${wrong.map(w=>`<button class="word-btn" onclick="speakWord('${w}')">🔊 ${w}</button>`).join("")}`;
+
+  saveProgress(stars);
+  showProgress();
+  showCert(stars,u.title);
+}
+
+/* ===== PROGRESS ===== */
+function saveProgress(stars){
+  let key=studentName.value+"-"+studentClass.value;
+  if(!key.trim()) return;
+  let d=JSON.parse(localStorage.getItem(key))||{times:0,total:0};
+  d.times++; d.total+=stars;
+  localStorage.setItem(key,JSON.stringify(d));
+}
+function showProgress(){
+  let key=studentName.value+"-"+studentClass.value;
+  let d=JSON.parse(localStorage.getItem(key));
+  if(!d){progress.innerText="No data yet.";return;}
+  progress.innerHTML=`Attempts: ${d.times}<br>Average stars: ${(d.total/d.times).toFixed(1)} ⭐`;
+}
+
+/* ===== CERT ===== */
+function showCert(star,title){
+  certificate.style.display="block";
+  cName.innerText=studentName.value;
+  cClass.innerText="Class: "+studentClass.value;
+  cUnit.innerText=title;
+  cStar.innerText="⭐".repeat(star);
+}
+</script>
+</body>
+</html>
